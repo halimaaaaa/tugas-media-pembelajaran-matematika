@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System of Linear Equations Solver</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  #container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  h2 {
+    color: #5555aa; 
+    font-size: 15px; 
+    font-weight: normal;
+    margin-bottom: 50px;
+  }
+  h1 {
+    text-align: center;
+    color: #333;
+    font-size: 25px;
+    margin-bottom: 10px;
+  }
+  .equation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .equation input {
+    width: 40px;
+    margin: 0 5px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  .equation span {
+    color: #666;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+  }
+  button:hover {
+    background-color: #d9f8db;
+  }
+  #solution {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <h1>Sistem Linear 3 Variable</h1>
+    <h2>Developer: Siti Halimah</h2>
+    <div id="equations">
+      <div class="equation">
+        <input type="text" id="a1" placeholder="a1" />
+        <span> x + </span>
+        <input type="text" id="b1" placeholder="b1" />
+        <span> y + </span>
+        <input type="text" id="c1" placeholder="c1" />
+        <span> z = </span>
+        <input type="text" id="k1" placeholder="k1" />
+      </div>
+      <div class="equation">
+        <input type="text" id="a2" placeholder="a2" />
+        <span> x + </span>
+        <input type="text" id="b2" placeholder="b2" />
+        <span> y + </span>
+        <input type="text" id="c2" placeholder="c2" />
+        <span> z = </span>
+        <input type="text" id="k2" placeholder="k2" />
+      </div>
+      <div class="equation">
+        <input type="text" id="a3" placeholder="a3" />
+        <span> x + </span>
+        <input type="text" id="b3" placeholder="b3" />
+        <span> y + </span>
+        <input type="text" id="c3" placeholder="c3" />
+        <span> z = </span>
+        <input type="text" id="k3" placeholder="k3" />
+      </div>
+      <button onclick="solveEquation()">Solve</button>
+    </div>
+    <div id="solution"></div>
+  </div>
+
+  <script>
+
+function solveEquation() {
+    const solution= solveCubic(
+        document.getElementById('a1').value,
+        document.getElementById('b1').value,
+        document.getElementById('c1').value,
+        document.getElementById('a2').value,
+        document.getElementById('b2').value,
+        document.getElementById('c2').value,
+        document.getElementById('a3').value,
+        document.getElementById('b3').value,
+        document.getElementById('c3').value,
+        document.getElementById('k1').value,
+        document.getElementById('k2').value,
+        document.getElementById('k3').value
+    );
+
+    document.getElementById('solution').innerHTML= solution;
+}
+
+function solveCubic(a1, b1, c1, a2, b2, c2, a3, b3, c3, k1, k2, k3) {
+    const mA = [
+      [a1, b1, c1],
+      [a2, b2, c2],
+      [a3, b3, c3]
+    ];
+    
+    const inverseA= inverse(mA);
+    
+    const vector= [k1, k2, k3];
+    
+    const [[d1, e1, f1], [d2, e2, f2], [d3, e3, f3]]= inverseA;
+    
+    const result= [
+        d1*k1+ e1*k2+ f1*k3,
+        d2*k1+ e2*k2+ f2*k3,
+        d3*k1+ e3*k2+ f3*k3
+    ];
+    
+    const resultX=`x = ${result[0]}`;
+    const resultY=`y = ${result[1]}`;
+    const resultZ=`z = ${result[2]}`;
+    
+    return `Solusinya adalah ${resultX}, ${resultY}, ${resultZ}.`;
+    
+}
+
+function inverse(m) {
+  [
+    [a, b, c],
+    [d, e, f],
+    [g, h, i]
+  ] = m;
+  let x = e * i - h * f,
+    y = f * g - d * i,
+    z = d * h - g * e,
+    det = a * x + b * y + c * z;
+  return det != 0 ? [
+    [x, c * h - b * i, b * f - c * e],
+    [y, a * i - c * g, d * c - a * f],
+    [z, g * b - a * h, a * e - d * b]
+  ].map(r => r.map(v => v /= det)) : null;
+} 
+  </script>
+</body>
+</html>

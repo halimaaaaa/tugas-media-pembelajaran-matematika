@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System of Linear Equations Solver</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  #container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  h2 {
+    color: #5555aa; 
+    font-size: 15px; 
+    font-weight: normal;
+    margin-bottom: 50px;
+  }
+  h1 {
+    text-align: center;
+    color: #333;
+    font-size: 25px;
+    margin-bottom: 10px;
+  }
+  .equation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .equation input {
+    width: 40px;
+    margin: 0 5px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  .equation span {
+    color: #666;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+  }
+  button:hover {
+    background-color: #d9f8db;
+  }
+  #solution {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <h1>Sistem Linear 2 Variable</h1>
+    <h2>Developer: Siti Halimah</h2>
+    <div id="equations">
+      <div class="equation">
+        <input type="text" id="a1" placeholder="a" />
+        <span> x + </span>
+        <input type="text" id="b1" placeholder="b" />
+        <span> y = </span>
+        <input type="text" id="c1" placeholder="c" />
+      </div>
+      <div class="equation">
+        <input type="text" id="a2" placeholder="a" />
+        <span> x + </span>
+        <input type="text" id="b2" placeholder="b" />
+        <span> y = </span>
+        <input type="text" id="c2" placeholder="c" />
+      </div>
+      <button onclick="solveEquations()">Solve</button>
+    </div>
+    <div id="solution"></div>
+  </div>
+
+  <script>
+    class Fraction {
+
+        constructor(a, b) {
+            this.a= a;
+            this.b= b;
+            
+            console.log()
+        }
+
+        add(f) {
+            let a= this.a;
+            let b= this.b;
+
+            a= a*f.b+ this.b*f.a;
+            b= b*f.b;
+            
+            let x = Math.abs(a);
+            let y = Math.abs(b);
+            while(y) {
+                var t = y;
+                y = x % y;
+                x = t;
+            }
+
+            const factor= x;
+
+            a= a/Math.max(factor, 1);
+            b= b/Math.max(factor, 1);
+
+            return new Fraction(a, b);
+        }
+
+        minus() {
+            let a= this.a;
+            let b= this.b;
+
+            return new Fraction(-a, b);
+        }
+
+        multiply(f) {
+            let a= this.a;
+            let b= this.b;
+
+            a= a*f.a;
+            b= b*f.b;
+
+            return new Fraction(a, b);
+        }
+    }
+
+    function constructFraction(f) {
+            
+        let arr= f.split('/');
+        let a= arr[0];
+
+        let b= 1;
+        if(arr.length > 1) {
+            b= arr[1];
+        }
+
+        let F= new Fraction(parseInt(a), parseInt(b)); 
+
+        return F;
+    }
+
+    function involute(f) {
+        let F= new Fraction(f.a, f.b);
+        if(f.b< 0) {
+            F= new Fraction(-f.a, -f.b);
+        }
+
+        return F;
+    }
+
+
+    function solveEquations() {
+      let error= null;
+      
+      // Get input values
+      var a1 = document.getElementById('a1').value;
+      var b1 = document.getElementById('b1').value;
+      var c1 = document.getElementById('c1').value;
+      var a2 = document.getElementById('a2').value;
+      var b2 = document.getElementById('b2').value;
+      var c2 = document.getElementById('c2').value;
+
+      if((!isNumeric(a1)) || !isNumeric(a2) || !isNumeric(b1) || !isNumeric(b2) || !isNumeric(c1) || !isNumeric(c2)) {
+        error= "Error: Input harus berupa bilangan!";
+      } else if(!noFloat(a1) || !noFloat(a2) || !noFloat(b1) || !noFloat(b2) || !noFloat(c1) | !noFloat(c2)) {
+        error= "Error: Input tidak boleh desimal!"
+      }
+
+      //constructing the fractions
+      let a_1= constructFraction(a1);
+      let b_1= constructFraction(b1);
+      let c_1= constructFraction(c1);
+
+      let a_2= constructFraction(a2);
+      let b_2= constructFraction(b2);
+      let c_2= constructFraction(c2);
+
+      // Solving the equations
+      var determinant = a_1.multiply(b_2).add(a_2.multiply(b_1).minus());
+
+      if (determinant.a === 0) {
+        document.getElementById('solution').innerText = "No unique solution exists (parallel lines or identical lines).";
+        return;
+      }
+
+      let c_1b_2= c_1.multiply(b_2);
+      let c_2b_1= c_2.multiply(b_1);
+      let minc_2b_1= c_2b_1.minus();
+
+      let a_1c_2= a_1.multiply(c_2);
+      let a_2c_1= a_2.multiply(c_1);
+      let mina_2c_1= a_2c_1.minus();
+
+      let up_kramer_1= c_1b_2.add(minc_2b_1);
+      let up_kramer_2= a_1c_2.add(mina_2c_1);
+
+      var x = new Fraction(up_kramer_1.a*determinant.b, up_kramer_1.b*determinant.a);
+      var y = new Fraction(up_kramer_2.a*determinant.b, up_kramer_2.b*determinant.a);
+
+      x= involute(x);
+      y= involute(y);
+
+      console.log(`x= ${x.a}/${x.b}`);
+      console.log(`y= ${y.a}/${y.b}`);
+
+      let cfx= gcd(x.a, x.b);
+      let cfy= gcd(y.a, y.b)
+
+
+      // Display the solution
+      if(error== null) {
+        document.getElementById('solution').innerText = `Solution: x = ${x.a/cfx}${x.b/cfx==1? "" : `/${x.b/cfx}`}, y = ${y.a/cfy}${y.b/cfy==1? "" : `/${y.b/cfy}`}`;
+      } else {
+        document.getElementById('solution').innerText= error;
+      }
+      
+    }
+
+    function gcd(x, y) {
+        if ((typeof x !== 'number') || (typeof y !== 'number')) 
+            return false;
+        x = Math.abs(x);
+        y = Math.abs(y);
+        while(y) {
+            var t = y;
+            y = x % y;
+            x = t;
+        }
+        return x;
+    }
+
+    function noFloat(x) {
+        if(parseFloat(x)%1 != 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function isNumeric(x) {
+        let val= true;
+        if(x.split('/').length> 1) {
+            val= !isNaN(x.split('/')[1]);
+        }
+
+        return val && !isNaN(x.split('/')[0]);
+    }
+
+  </script>
+</html>

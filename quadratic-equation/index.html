@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pemecahan Persamaan Kuadrat</title>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #container {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    h2 {
+      color: #5555aa; 
+      font-size: 15px; 
+      font-weight: normal;
+      margin-bottom: 50px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+    .equation {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .equation input {
+      width: 40px;
+      margin: 0 5px;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    .equation span {
+      color: #666;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #solution {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Quadratic Equation Solver</h1>
+      <h2>Developer: Siti Halimah</h2>
+      <div id="equations">
+        <div class="equation">
+          <input type="text" id="a" placeholder="a" />
+          <span> x^2 + </span>
+          <input type="text" id="b" placeholder="b" />
+          <span> x + </span>
+          <input type="text" id="c" placeholder="c" />
+          <span> = 0</span>
+        </div>
+        <button onclick="solveQuadratic()">Solve</button>
+      </div>
+      <div id="result"></div>
+    </div>
+
+<script>
+function solveQuadratic() {
+  var a = parseFloat(document.getElementById('a').value);
+  var b = parseFloat(document.getElementById('b').value);
+  var c = parseFloat(document.getElementById('c').value);
+  
+  var discriminant = b * b - 4 * a * c;
+  
+  if (a === 0) {
+    document.getElementById('result').innerText = 'Koefisien a tidak boleh nol!';
+  } else if (discriminant > 0) {
+    var x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+    var x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+    document.getElementById('result').innerText = 'Akar x1 = ' + x1.toFixed(2) + ', Akar x2 = ' + x2.toFixed(2);
+  } else if (discriminant === 0) {
+    var x = -b / (2 * a);
+    document.getElementById('result').innerText = 'Akar ganda: x = ' + x.toFixed(2);
+  } else {
+    document.getElementById('result').innerText = 'Persamaan tidak memiliki akar real.';
+  }
+}
+</script>
+
+</body>
+</html>
